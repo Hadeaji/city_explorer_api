@@ -61,7 +61,7 @@ function handelWeather(req,res){
             let forcast = element.weather.description;
             let time = taskDate(Date.parse(element.datetime));
 
-            let cityWeather = new Weather(forcast,time);
+            let cityWeather = new Weather(forcast,time,city);
             result.push(cityWeather);
         });
 
