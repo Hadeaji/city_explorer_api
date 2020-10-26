@@ -61,15 +61,15 @@ function Weather(forecast, time) {
 
 function handelWeather(req, res) {
 
-//   let city = req.query.search_query;
+  //   let city = req.query.search_query;
 
   superagent.get(`https://api.weatherbit.io/v2.0/forecast/daily?city=${req.query.search_query}&key=${WEATHER_API_KEY}`)
     .then((value) => {
       let jsonObject = value.body.data;
 
-      let result =jsonObject.map((element)=>{
-          return new Weather(element.weather.description,taskDate(Date.parse(element.datetime)))
-      })
+      let result = jsonObject.map((element) => {
+        return new Weather(element.weather.description, taskDate(Date.parse(element.datetime)));
+      });
 
       res.status(200).json(result);
 
@@ -85,17 +85,17 @@ function handelWeather(req, res) {
 app.get('/trails', handelTrails);
 
 
-function Trail(value){
-    this.name = value.name;
-    this.location = value.location;
-    this.length = value.length;
-    this.stars = value.stars;
-    this.star_votes = value.starVotes;
-    this.summary = value.summary;
-    this.trail_url = value.url;
-    this.conditions = value.conditionStatus;
-    this.condition_date = ((value.conditionDate.toString()).split(' ')[0]);
-    this.condition_time = ((value.conditionDate.toString()).split(' ')[1]);
+function Trail(value) {
+  this.name = value.name;
+  this.location = value.location;
+  this.length = value.length;
+  this.stars = value.stars;
+  this.star_votes = value.starVotes;
+  this.summary = value.summary;
+  this.trail_url = value.url;
+  this.conditions = value.conditionStatus;
+  this.condition_date = ((value.conditionDate.toString()).split(' ')[0]);
+  this.condition_time = ((value.conditionDate.toString()).split(' ')[1]);
 }
 
 function handelTrails(req, res) {
@@ -105,10 +105,10 @@ function handelTrails(req, res) {
     .then((value) => {
       let jsonObject = value.body.trails;
 
-      
-      let result =jsonObject.map((element)=>{
-        return new Trail(element)
-    })
+
+      let result = jsonObject.map((element) => {
+        return new Trail(element);
+      });
 
       console.log(result);
       res.status(200).json(result);
