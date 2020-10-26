@@ -11,6 +11,7 @@
 
 ## Getting Started
 <!-- What are the steps that a user must take in order to build this app on their own machine and get it running? -->
+provide URL the deployed back end [like this](https://hadi-city-explorer.herokuapp.com) then type the name of the location needed
 
 ## Architecture
 <!-- Provide a detailed description of the application design. What technologies (languages, libraries, etc) you're using, and any other relevant design information. -->
@@ -22,7 +23,10 @@ libraries: cors ,express and dotenv
 
 <!-- Use this area to document the iterative changes made to your application as each feature is successfully implemented. Use time stamps. Here's an examples:
 
-01-01-2001 4:59pm - Application now has a fully-functional express server, with a GET route for the location resource.
+<!-- 01-01-2001 4:59pm - Application now has a fully-functional express server, with a GET route for the location resource. -->
+
+26-10-2020 12:54am - first deployment of the App - I added the it can show the location info and the weather info
+26-10-2020 7:40pm - made the app take info from API's and shows map , weather info ad trails for the provided location + some improvments
 
 ## Credits and Collaborations
 <!-- Give credit (and a link) to other people or resources that helped you build this application. -->
