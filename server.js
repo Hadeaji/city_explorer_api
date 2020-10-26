@@ -44,8 +44,8 @@ const PORT = process.env.PORT;
 app.get('/weather',handelWeather)
 
 
-function Weather(forcast,time){
-    this.forcast = forcast;
+function Weather(forecast,time){
+    this.forecast = forecast;
     this.time = time; 
 }
 
@@ -58,10 +58,10 @@ function handelWeather(req,res){
         let result=[];
 
         jsonObject.forEach(element => {
-            let forcast = element.weather.description;
+            let forecast = element.weather.description;
             let time = taskDate(Date.parse(element.datetime));
 
-            let cityWeather = new Weather(forcast,time,city);
+            let cityWeather = new Weather(forecast,time,city);
             result.push(cityWeather);
         });
 
