@@ -35,8 +35,6 @@ function handelGettingPeopleData(req, res) {
 }
 
 
-
-
 function handelLocation(city, res) {
 
   // let jsonData = require('./data/location.json');
