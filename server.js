@@ -2,6 +2,7 @@
 let express = require('express');
 let cors = require('cors');
 let superagent = require('superagent');
+let pg = require('pg');
 
 let app = express();
 app.use(cors());
@@ -9,30 +10,48 @@ app.use(cors());
 require('dotenv').config();
 
 const PORT = process.env.PORT;
+const DATABASE_URL = process.env.DATABASE_URL;
 const GEOCODE_API_KEY = process.env.GEOCODE_API_KEY;
 const WEATHER_API_KEY = process.env.WEATHER_API_KEY;
 const TRAIL_API_KEY = process.env.TRAIL_API_KEY;
 
-
+let client = new pg.Client(DATABASE_URL);
 //
 
 // first request
-app.get('/location', handelLocation);
+app.get('/location', handelGettingPeopleData);
 
 
-function handelLocation(req, res) {
-
+function handelGettingPeopleData(req, res) {
   let city = req.query.city;
+  client.query(`SELECT search_query, formatted_query, latitude, longitude FROM locations WHERE search_query = '${city}'`).then((data) => {
+    if (data.rowCount === 0) {
+      handelLocation(city, res);
+    } else {
+      res.status(200).json(data.rows[0]);
+      console.log('Got Data From Database');
+    }
+  });
+}
+
+
+
+
+function handelLocation(city, res) {
+
   // let jsonData = require('./data/location.json');
   superagent.get(`https://eu1.locationiq.com/v1/search.php?key=${GEOCODE_API_KEY}&q=${city}&format=json`)
     .then((data) => {
       let jsonObject = data.body[0];
       let locationObject = new Location(city, jsonObject.display_name, jsonObject.lat, jsonObject.lon);
       res.status(200).json(locationObject);
+
+      // insert data to database
+      client.query(`INSERT INTO locations(search_query, formatted_query, latitude, longitude) values ('${locationObject.search_query}', '${locationObject.formatted_query}','${locationObject.latitude}', '${locationObject.longitude}')`);
     })
-  // let jsonObject = jsonData[0];
-  // let locationObject = new Location(city, jsonObject.display_name, jsonObject.lat, jsonObject.lon);
-  // res.status(200).json(locationObject);
+    // let jsonObject = jsonData[0];
+    // let locationObject = new Location(city, jsonObject.display_name, jsonObject.lat, jsonObject.lon);
+    // res.status(200).json(locationObject);
     .catch(() => {
       res.send('Sorry, something went wrong');
     });
@@ -123,6 +142,9 @@ function handelTrails(req, res) {
 //
 
 
+
+
+
 function taskDate(dateMilli) {
   var d = (new Date(dateMilli) + '').split(' ');
   return [d[0], d[1], d[2], d[3]].join(' ');
@@ -130,8 +152,8 @@ function taskDate(dateMilli) {
 
 
 //
-
-app.listen(PORT, () => {
-  console.log(`The App Port is ${PORT}`);
-
+client.connect().then(() => {
+  app.listen(PORT, () => {
+    console.log(`The App Port is ${PORT}`);
+  });
 });
