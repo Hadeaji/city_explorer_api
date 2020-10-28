@@ -14,6 +14,8 @@ const DATABASE_URL = process.env.DATABASE_URL;
 const GEOCODE_API_KEY = process.env.GEOCODE_API_KEY;
 const WEATHER_API_KEY = process.env.WEATHER_API_KEY;
 const TRAIL_API_KEY = process.env.TRAIL_API_KEY;
+const MOVIE_API_KEY = process.env.MOVIE_API_KEY;
+const YELP_API_KEY = process.env.YELP_API_KEY;
 
 let client = new pg.Client(DATABASE_URL);
 //
@@ -138,7 +140,95 @@ function handelTrails(req, res) {
 
 
 //
+// movies
 
+app.get('/movies', handelMovies);
+
+function handelMovies(req, res) {
+
+
+  superagent.get(`https://api.themoviedb.org/3/search/movie?api_key=${MOVIE_API_KEY}&query=${req.query.search_query}`)
+    .then((value) => {
+      let jsonObject = value.body.results;
+
+
+      let result = jsonObject.map((element) => {
+        return new Movie(element);
+      });
+
+      console.log(result);
+      res.status(200).json(result);
+
+    }).catch(() => {
+      res.send('Sorry, something went wrong');
+    });
+
+}
+
+function Movie(value) {
+  this.title = value.title;
+  this.overview = value.overview;
+  this.average_votes = value.vote_average;
+  this.total_votes = value.vote_count;
+  this.image_url = `https://image.tmdb.org/t/p/w500${value.poster_path}`;
+  this.popularity = value.popularity;
+  this.released_on = value.release_date;
+
+}
+
+//
+
+// movies
+
+app.get('/yelp',handelRust);
+
+let page=1;
+function handelRust(req, res) {
+
+  const numPerPage =5;
+  const start =((page -1) * numPerPage +1);
+  page++;
+
+
+  const queryParams = {
+    location:req.query.search_query,
+    limit: numPerPage,
+    offset:start,
+
+  };
+
+
+  superagent.get(`https://api.yelp.com/v3/businesses/search`)
+    .query(queryParams)
+    .set('Authorization',`Bearer ${process.env.YELP_API_KEY}`)
+    .then((value) => {
+      let jsonObject = value.body.businesses;
+
+
+      let result = jsonObject.map((element) => {
+        return new Rust(element);
+      });
+
+      console.log(result);
+      res.status(200).json(result);
+
+    }).catch(() => {
+      res.send('Sorry, something went wrong');
+    });
+
+}
+
+function Rust(value) {
+
+  this.name=value.name;
+  this.image_url=value.image_url;
+  this.price=value.price;
+  this.rating=value.rating;
+  this.url=value.url;
+
+}
+
+//
 
 
 
