@@ -28,6 +28,9 @@ libraries: cors ,express and dotenv
 26-10-2020 12:54am - first deployment of the App - I added the it can show the location info and the weather info
 26-10-2020 7:40pm - made the app take info from API's and shows map , weather info ad trails for the provided location + some improvments
 27-10-2020 7:38pm - added database the app can now take previously searched locations from the database to save time and resourses.
+27-10-2020 7:38pm - add the movies and the yelp
+27-10-2020 7:38pm - modulizations for the code and refactoring
 
 ## Credits and Collaborations
 <!-- Give credit (and a link) to other people or resources that helped you build this application. -->
+canvas.com
